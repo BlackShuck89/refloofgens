@@ -54,6 +54,27 @@ assert.deepEqual(legacy.director, ["old_director"]);
 assert.deepEqual(legacy.franchise, ["old_franchise"]);
 assert.deepEqual(APIPost.normalizeTags(undefined).director, []);
 
+// Floofgens' default post API now uses PostBlueprint with "files" and "stats"
+// and flat (basic mode) tags. Our current renderer relies on the v1 legacy shape.
+const newDefaultPost = {
+  id: 194198,
+  files: { meta: { md5: "abc", ext: "png" }, original: { url: "https://static1.floofgens.net/data/a.png" } },
+  stats: { score: { up: 1, down: 0, total: 1 }, fav_count: 2 },
+  tags: ["solo", "fox"],
+};
+const legacyPost = {
+  id: 194198,
+  file: { md5: "abc", ext: "png", url: "https://static1.floofgens.net/data/a.png" },
+  preview: { url: "https://static1.floofgens.net/data/preview/a.jpg" },
+  sample: { has: false, url: null },
+  score: { up: 1, down: 0, total: 1 },
+  tags: floofgensTags,
+};
+assert.equal("file" in newDefaultPost, false);
+assert.equal(Array.isArray(newDefaultPost.tags), true);
+assert.equal(typeof legacyPost.file.url, "string");
+assert.equal(Array.isArray(legacyPost.tags.artist), true);
+
 const samplePosts = [post, { id: 194193, tags: historicE6aiTags }];
 assert.deepEqual(unwrapResponse({ posts: samplePosts }, "posts"), samplePosts);
 assert.deepEqual(unwrapResponse(samplePosts, "posts"), samplePosts);

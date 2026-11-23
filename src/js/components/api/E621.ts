@@ -346,6 +346,16 @@ export class E621 {
       requestInfo.body = FormattedAPIQuery.stringify(requestBody);
     }
 
+    // Floofgens now defaults post endpoints to a new v2 representation
+    // (files/stats plus basic string-array tags). Existing reFloofgens
+    // modules expect the v1 PostLegacyBlueprint shape: file, preview,
+    // sample, score, and categorized tags. Request that shape explicitly
+    // for post searches, individual posts, and favorites until the modules
+    // have been migrated to the new API contract.
+    if (method === "GET" && ["posts", "post", "favorites"].includes(endpoint)) {
+      query["v1"] = "true";
+    }
+
     // Append query parameters to the URL
     query["_client"] = window["re621"]["useragent"];
 

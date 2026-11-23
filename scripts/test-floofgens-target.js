@@ -41,6 +41,12 @@ assert(!JSON.stringify(extension).includes("blep.art"), "Extension must not targ
 assert.match(api, /query\["_client"\]\s*=\s*window\["re621"\]\["useragent"\]/);
 assert.match(api, /requestRateLimit\s*=\s*1000\s*;/);
 assert.match(api, /delay\s*<\s*E621\.requestRateLimit/);
+assert(api.includes('["posts", "post", "favorites"].includes(endpoint)'),
+  "Legacy v1 post API should be requested on post, search and favorites endpoints");
+assert(api.includes('query["v1"] = "true";'),
+  "Legacy post API calls must include v1=true");
+assert(api.includes('if (method === "GET"'),
+  "Legacy post shape should not be requested for write methods");
 assert(!post.includes("static1.e6ai.net"), "Preview generation must not use the retired CDN");
 assert(post.includes('url.hostname === "floofgens.net" || url.hostname.endsWith(".floofgens.net")'),
   "Thumbnail origin discovery must allow the Floofgens CDN");
